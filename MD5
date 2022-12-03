@@ -1,5 +1,6 @@
-df6588ddd4efb89c13f5a6cbc6a6764b *DESCRIPTION
+968b7e30ce9aaf14f1a3b77b90751dbb *DESCRIPTION
 b47bec740322b9f28ec0263ad715ca18 *NAMESPACE
+5cd677bfc9070993d87d224612e5f064 *NEWS.md
 fcb9d910750d9f7c49cea92172fbbc01 *R/GAGAs.R
 080cad2a8dffa0f2ff5fb078a80275e6 *R/LM_GAGA.R
 d6873fe23ca91fd5f83f0c139d5cdca5 *R/RcppExports.R
@@ -11,6 +12,7 @@ dc1bda18f40ef631388ee48b45cf36da *R/cox_GAGA.R
 0a991139899dd24cedc8d62a8f47bf99 *R/multinomial_GAGA.R
 33698bb63f5d012ab148be5f79716b6d *R/poisson_GAGA.R
 7a3c62c6fe9ee380899270499230e60e *R/predict.GAGA.R
+f1da14fa0af839c292662ad155c81088 *README.md
 8e75eec52685e3ee157eb2c13b618795 *man/GAGAs.Rd
 92a725bbee448ba31bd3099084cfc9b1 *man/LM_GAGA.Rd
 f0772c193742d45c25ade8732f65ff2c *man/cal.acc.Rd
@@ -31,7 +33,7 @@ b677e511fac2c426f47beb6f9240ed63 *man/predict_logistic_GAGA.Rd
 31a912a7e4cd422fa4531b2f0717a886 *man/predict_multinomial_GAGA.Rd
 c973f565734fa4ba2ced8d4d58df3c35 *man/predict_poisson_GAGA.Rd
 bc6ea9be99ce8d9f064db179b9f0d456 *man/rcpp_lm_gaga.Rd
-d2a2464268e185d91f4d123c34dd1866 *src/LM_GAGA.cpp
+7fabbcd0feb231809f3b96c9d7847f82 *src/LM_GAGA.cpp
 2ea30df53eb28a3c45a2c96550669843 *src/Makevars
 4bd785f63c5666c52349dd102c7f1258 *src/RcppExports.cpp
 64f7974ddd67913f60523e5235151f6d *src/cox_GAGA.cpp

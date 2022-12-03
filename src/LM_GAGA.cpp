@@ -48,13 +48,13 @@ Eigen::MatrixXd cpp_omp(Eigen::MatrixXd const &X, Eigen::MatrixXd const &y, int 
 
 Eigen::MatrixXd getEb_LM(Eigen::MatrixXd const &XtX, Eigen::MatrixXd const &Xty ,double sigma2, Eigen::MatrixXd const &B) {
   Eigen::MatrixXd tmp = XtX.array() + B.array()*sigma2;
-  return tmp.ldlt().solve(Xty);
+  return tmp.llt().solve(Xty);
 }
 
 Eigen::MatrixXd getEb_LM(Eigen::MatrixXd const &XtX, Eigen::MatrixXd const &Xty, double lambda) {
   MatrixXd tmp = XtX.array();
   tmp.diagonal().array() += lambda;
-  return tmp.ldlt().solve(Xty);
+  return tmp.llt().solve(Xty);
 }
 
 Eigen::MatrixXd getEbb_LM(Eigen::MatrixXd const &XtX, double sigma2, Eigen::MatrixXd const &B, bool fdiag) {
