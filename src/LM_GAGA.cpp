@@ -183,7 +183,7 @@ Rcpp::List rcpp_lm_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y,SEXP s_alpha, SEXP 
           else beta(k) = 0;
         }
         if (tmpQ == 0) {
-          beta.setZero();
+          beta = Eigen::MatrixXd::Zero(P, 1);
           return Rcpp::List::create(Rcpp::Named("itrNum") = index,
                                     Rcpp::Named("beta") = beta);
         }

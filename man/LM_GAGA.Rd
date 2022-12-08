@@ -15,8 +15,8 @@ LM_GAGA(
   lamda_0 = 0.001,
   fix_sigma = FALSE,
   sigm2_0 = 1,
-  fdiag = FALSE,
-  frp = FALSE
+  fdiag = TRUE,
+  frp = TRUE
 )
 }
 \arguments{

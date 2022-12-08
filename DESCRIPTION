@@ -2,7 +2,7 @@ Package: GAGAs
 Type: Package
 Title: Global Adaptive Generative Adjustment Algorithm for Generalized
         Linear Models
-Version: 0.5.0
+Version: 0.5.1
 Language: en-US
 Authors@R: c(
       person("Bin", "Wang", role=c("aut", "cre"), email="eatingbeen@hotmail.com"),
@@ -25,9 +25,9 @@ LinkingTo: Rcpp, RcppEigen
 RoxygenNote: 7.2.2
 Maintainer: Bin Wang <eatingbeen@hotmail.com>
 NeedsCompilation: yes
-Packaged: 2022-12-03 13:12:30 UTC; pc
+Packaged: 2022-12-08 14:16:13 UTC; pc
 Author: Bin Wang [aut, cre],
   Xiaofei Wang [ctb],
   Jianhua Guo [ths]
 Repository: CRAN
-Date/Publication: 2022-12-03 22:22:29 UTC
+Date/Publication: 2022-12-08 23:52:30 UTC

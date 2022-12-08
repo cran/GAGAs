@@ -54,7 +54,7 @@
 #' cat("\n acc:", cal.w.acc(as.character(Eb!=0),as.character(beta_true!=0)))
 #' cat("\n perr:", norm(Ey-y_t,type="2")/sqrt(sample_size))
 
-LM_GAGA = function(X,y,alpha=3,itrNum=50,thresh=1.e-3,QR_flag=FALSE,flag=TRUE,lamda_0=0.001,fix_sigma=FALSE,sigm2_0 = 1,fdiag = FALSE,frp = FALSE){
+LM_GAGA = function(X,y,alpha=3,itrNum=50,thresh=1.e-3,QR_flag=FALSE,flag=TRUE,lamda_0=0.001,fix_sigma=FALSE,sigm2_0 = 1,fdiag = TRUE,frp = TRUE){
 
   exitflag = FALSE
   vnames=colnames(X)
