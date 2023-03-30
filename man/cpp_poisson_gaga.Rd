@@ -4,7 +4,17 @@
 \alias{cpp_poisson_gaga}
 \title{Fit a poisson model via the GAGA algorithm using cpp}
 \usage{
-cpp_poisson_gaga(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag)
+cpp_poisson_gaga(
+  X,
+  y,
+  s_alpha,
+  s_itrNum,
+  s_thresh,
+  s_flag,
+  s_lamda_0,
+  s_fdiag,
+  s_subItrNum
+)
 }
 \arguments{
 \item{X}{Input matrix, of dimension nobs*nvars; each row is an observation.
@@ -30,6 +40,8 @@ number of iteration steps.}
 The running result of the algorithm is not sensitive to this value.}
 
 \item{s_fdiag}{It identifies whether to use diag Approximation to speed up the algorithm.}
+
+\item{s_subItrNum}{Maximum number of steps for subprocess iterations.}
 }
 \value{
 Coefficient vector.

@@ -14,6 +14,7 @@
 #' @param lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+#' @param subItrNum Maximum number of steps for subprocess iterations.
 #'
 #' @return Coefficient matrix with K-1 columns beta_1,...,beta_{K-1} where K is the class number.
 #' For k=1,..,K-1, the probability
@@ -31,13 +32,13 @@
 #' classnames = c("C1","C2","C3","C4")
 #' sample_size = 500
 #' test_size = 1000
-#' rate = 0.5 #Proportion of value zero in beta
+#' ratio = 0.5 #The ratio of zeroes in coefficients
 #' Num = 10 # Total number of experiments
 #' R1 = 1
 #' R2 = 5
-#' #Set true beta
+#' #Set the true coefficients
 #' beta_true = matrix(rep(0,p_size*C),c(p_size,C))
-#' zeroNum = round(rate*p_size)
+#' zeroNum = round(ratio*p_size)
 #' for(jj in 1:C){
 #'   ind = sample(1:p_size,zeroNum)
 #'   tmp = runif(p_size,0,R2)
@@ -94,7 +95,7 @@
 #' cat("\n pacc:", cal.w.acc(as.character(Ey),as.character(y_t)))
 #' cat("\n")
 
-multinomial_GAGA = function(X,y,alpha=1,itrNum=50,thresh=1.e-3,flag=TRUE,lamda_0=0.001,fdiag=TRUE){
+multinomial_GAGA = function(X,y,alpha=1,itrNum=50,thresh=1.e-3,flag=TRUE,lamda_0=0.001,fdiag=TRUE, subItrNum = 20){
 
   exitflag = FALSE
   eps = 1.e-19
@@ -124,7 +125,7 @@ multinomial_GAGA = function(X,y,alpha=1,itrNum=50,thresh=1.e-3,flag=TRUE,lamda_0
   fit$classnames = classnames
   class(fit) = c("GAGA","multinomial")
 
-  tmpfit = cpp_multinomial_gaga(X, as.matrix(y), alpha, itrNum, thresh, flag, lamda_0, fdiag)
+  tmpfit = cpp_multinomial_gaga(X, as.matrix(y), alpha, itrNum, thresh, flag, lamda_0, fdiag, subItrNum)
 
   fit$beta = tmpfit$beta
   rownames(fit$beta) = vnames

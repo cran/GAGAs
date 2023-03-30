@@ -33,9 +33,9 @@
 #' sample_size=300
 #' R1 = 3
 #' R2 = 2
-#' rate = 0.5 #Proportion of value zero in beta
-#' # Set true beta
-#' zeroNum = round(rate*p_size)
+#' ratio = 0.5 # The ratio of zeroes in coefficients
+#' # Set the true coefficients
+#' zeroNum = round(ratio*p_size)
 #' ind = sample(1:p_size,zeroNum)
 #' beta_true = runif(p_size,0,R2)
 #' beta_true[ind] = 0
@@ -66,6 +66,7 @@ LM_GAGA = function(X,y,alpha=3,itrNum=50,thresh=1.e-3,QR_flag=FALSE,flag=TRUE,la
 
   fit$beta = as.vector(tmpfit$beta)
   names(fit$beta) = vnames
+  fit$sigma = tmpfit$sigma
   fit$alpha = alpha
   fit$itrNum = tmpfit$itrNum
   fit$fdiag = fdiag

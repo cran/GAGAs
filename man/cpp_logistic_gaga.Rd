@@ -12,7 +12,8 @@ cpp_logistic_gaga(
   s_thresh,
   s_flag,
   s_lamda_0,
-  s_fdiag
+  s_fdiag,
+  s_subItrNum
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ number of iteration steps.}
 The running result of the algorithm is not sensitive to this value.}
 
 \item{s_fdiag}{It identifies whether to use diag Approximation to speed up the algorithm.}
+
+\item{s_subItrNum}{Maximum number of steps for subprocess iterations.}
 }
 \value{
 Coefficient vector.

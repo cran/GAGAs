@@ -47,7 +47,7 @@ cat("\n Cindex:", cal.cindex(pred, y))
 Harrel Jr, F. E. and Lee, K. L. and Mark, D. B. (1996)
 \emph{Tutorial in biostatistics: multivariable prognostic models: issues in
 developing models, evaluating assumptions and adequacy, and measuring and
-reducing error}, Statistics in Medicine, 15, pages 361--387.#'
+reducing error}, Statistics in Medicine, 15, pages 361--387.
 }
 \seealso{
 \code{cv.glmnet}

@@ -17,9 +17,9 @@
 #' sample_size=300
 #' R1 = 3
 #' R2 = 2
-#' rate = 0.5 #Proportion of value zero in beta
-#' # Set true beta
-#' zeroNum = round(rate*p_size)
+#' ratio = 0.5 #The ratio of zeroes in coefficients
+#' # Set the true coefficients
+#' zeroNum = round(ratio*p_size)
 #' ind = sample(1:p_size,zeroNum)
 #' beta_true = runif(p_size,0,R2)
 #' beta_true[ind] = 0

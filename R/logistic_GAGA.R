@@ -13,6 +13,7 @@
 #' @param lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+#' @param subItrNum Maximum number of steps for subprocess iterations.
 #'
 #' @return Coefficient vector.
 #' @export logistic_GAGA
@@ -27,9 +28,9 @@
 #' test_size=1000
 #' R1 = 1
 #' R2 = 3
-#' rate = 0.5 #Proportion of value zero in beta
-#' #Set true beta
-#' zeroNum = round(rate*p_size)
+#' ratio = 0.5 #The ratio of zeroes in coefficients
+#' #Set the true coefficients
+#' zeroNum = round(ratio*p_size)
 #' ind = sample(1:p_size,zeroNum)
 #' beta_true = runif(p_size,R2*0.2,R2)
 #' beta_true[ind] = 0
@@ -55,7 +56,7 @@
 #' cat("\n acc:", cal.w.acc(as.character(Eb!=0),as.character(beta_true!=0)))
 #' cat("\n pacc:", cal.w.acc(as.character(Ey),as.character(y_t)))
 #' cat("\n")
-logistic_GAGA = function(X,y,alpha=1,itrNum=30,thresh=1.e-3,flag=TRUE,lamda_0=0.001,fdiag=TRUE){
+logistic_GAGA = function(X,y,alpha=1,itrNum=30,thresh=1.e-3,flag=TRUE,lamda_0=0.001,fdiag=TRUE, subItrNum = 20){
 
 
   vnames=colnames(X)
@@ -76,7 +77,7 @@ logistic_GAGA = function(X,y,alpha=1,itrNum=30,thresh=1.e-3,flag=TRUE,lamda_0=0.
   fit$classnames = classnames
   class(fit) = c("GAGA","binomial")
 
-  tmpfit = cpp_logistic_gaga(X, as.matrix(y), alpha, itrNum, thresh, flag, lamda_0, fdiag)
+  tmpfit = cpp_logistic_gaga(X, as.matrix(y), alpha, itrNum, thresh, flag, lamda_0, fdiag, subItrNum)
 
   fit$beta = as.vector(tmpfit$beta)
   names(fit$beta) = vnames

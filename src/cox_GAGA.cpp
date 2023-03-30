@@ -359,16 +359,17 @@ Eigen::MatrixXd getEb_COX(Eigen::MatrixXd const &u0, Eigen::MatrixXd const &X,
 //' @param y A n*1 matrix, indicating the survival time;
 //' @param cens A n*1 matrix, consists of 0 and 1, 1 indicates that the row of data is censored, 0 is opposite.
 //' @param alpha Hyperparameter. The suggested value for alpha is 2 or 3.
-//' @param itrNum The number of iteration steps. In general, 20 steps are enough.
+//' @param itrNum Maximum number of iteration steps. In general, 20 steps are enough.
 //' @param thresh Convergence threshold for beta Change, if \code{max(abs(beta-beta_old))<threshold}, return.
 //' @param flag It identifies whether to make model selection. The default is \code{TRUE}.
 //' @param lamda_0 The initial value of the regularization parameter for ridge regression.
 //' @param fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+//' @param subItrNum Maximum number of steps for subprocess iterations. 
 //'
 //' @return Coefficient vector
 // [[Rcpp::export]]
 Rcpp::List cpp_COX_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, Eigen::MatrixXd cens, double alpha = 2, int itrNum = 50, double thresh = 0.001,
-                             bool flag = true, double lamda_0 = 0.5, bool fdiag = true) {
+                             bool flag = true, double lamda_0 = 0.5, bool fdiag = true, int subItrNum = 20) {
 
   bool exitflag = false;
   double eps = 1.e-19;
@@ -418,28 +419,29 @@ Rcpp::List cpp_COX_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, Eigen::MatrixXd ce
 
     }
 
-    int maxItr = 20;
+    int maxItr = subItrNum;
     beta = getEb_COX(beta, X, sorty, freq, cens, atrisk, b, cov_beta, maxItr, fdiag);
     //cout<<beta<<endl;
     E_pow_beta = cov_beta.diagonal().array() + beta.array().pow(2);
 
     b = alpha / E_pow_beta.array();
 
-    if (flag && (index == itrNum || exitflag)) {
-      int tmpQ = (db.array() <= 100).count();
-      if (tmpQ == 0) {
-        beta.setZero();
-        break;
-      }
-      else {
-        cov0 = getDDfu_COX(beta, X, sorty, freq, cens, atrisk, Eigen::MatrixXd::Zero(p, 1), fdiag);
+    if (index == itrNum || exitflag) {
+		if (flag) {
+			int tmpQ = (db.array() <= 100).count();
+			if (tmpQ == 0) {
+				beta.setZero();				
+			}
+			else {
+				cov0 = getDDfu_COX(beta, X, sorty, freq, cens, atrisk, Eigen::MatrixXd::Zero(p, 1), fdiag);
 
-        Eigen::MatrixXd diagcov0 = cov0.diagonal();
-        for (int k = 0; k < diagcov0.size(); k++) {
-          if (E_pow_beta(k) < diagcov0(k) || db(k)>20) beta(k) = 0;
-        }
-        break;
-      }
+				Eigen::MatrixXd diagcov0 = cov0.diagonal();
+				for (int k = 0; k < diagcov0.size(); k++) {
+					if (E_pow_beta(k) < diagcov0(k) || db(k)>20) beta(k) = 0;
+				}				
+			}
+		}
+		break;	  
     }
     else {
       b_old = b;

@@ -176,40 +176,42 @@ Rcpp::List rcpp_lm_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y,SEXP s_alpha, SEXP 
       E_pow_beta = E_pow_beta_M.diagonal();
       b = alpha / E_pow_beta.array();
 
-      if (flag && (index == itrNum || exitflag)) {
-        int tmpQ = 0;
-        for (int k = 0; k < dB.size(); k++) {
-          if (dB(k) <= 100) tmpQ += 1;
-          else beta(k) = 0;
-        }
-        if (tmpQ == 0) {
-          beta = Eigen::MatrixXd::Zero(P, 1);
-          return Rcpp::List::create(Rcpp::Named("itrNum") = index,
-                                    Rcpp::Named("beta") = beta);
-        }
-        //if (tmpQ <= N) {
-        // X_sub = X[,dB<=100]; beta_sub = beta[dB<=100]; E_pow_beta_sub = E_pow_beta[dB<=100];
-        Eigen::MatrixXd X_sub(N, tmpQ);
-        Eigen::MatrixXd beta_sub(tmpQ, 1);
-        Eigen::MatrixXd E_pow_beta_sub(tmpQ, 1);
-        Eigen::VectorXi tmpidx(tmpQ);
-        int tmpi = 0;
-        for (int k = 0; k < dB.size(); k++) {
-          if (dB(k) <= 100) {
-            X_sub.col(tmpi) = X.col(k);
-            beta_sub(tmpi) = beta(k);
-            E_pow_beta_sub(tmpi) = E_pow_beta(k);
-            tmpidx(tmpi) = k;
-            tmpi += 1;
-          }
-        }//X_sub = X[,dB<=100]; beta_sub = beta[dB<=100]; E_pow_beta_sub = E_pow_beta[dB<=100];
-        Eigen::MatrixXd CRB_sub = getEbb_LM(X_sub.transpose()*X_sub, sigm2, fdiag);
-        for (int k = 0; k < tmpQ; k++) {
-          if (E_pow_beta_sub(k) < CRB_sub(k))beta_sub(k) = 0;
-          beta(tmpidx(k)) = beta_sub(k);
-        }
-        //}//if (tmpQ <= N)
-
+      if (index == itrNum || exitflag) {
+		  if (flag) {
+			  int tmpQ = 0;
+			  for (int k = 0; k < dB.size(); k++) {
+				  if (dB(k) <= 100) tmpQ += 1;
+				  else beta(k) = 0;
+			  }
+			  if (tmpQ == 0) {
+				  beta = Eigen::MatrixXd::Zero(P, 1);
+				  return Rcpp::List::create(Rcpp::Named("itrNum") = index,
+					  Rcpp::Named("beta") = beta,
+					  Rcpp::Named("sigma") = sqrt(sigm2));
+			  }
+			  //if (tmpQ <= N) {
+			  // X_sub = X[,dB<=100]; beta_sub = beta[dB<=100]; E_pow_beta_sub = E_pow_beta[dB<=100];
+			  Eigen::MatrixXd X_sub(N, tmpQ);
+			  Eigen::MatrixXd beta_sub(tmpQ, 1);
+			  Eigen::MatrixXd E_pow_beta_sub(tmpQ, 1);
+			  Eigen::VectorXi tmpidx(tmpQ);
+			  int tmpi = 0;
+			  for (int k = 0; k < dB.size(); k++) {
+				  if (dB(k) <= 100) {
+					  X_sub.col(tmpi) = X.col(k);
+					  beta_sub(tmpi) = beta(k);
+					  E_pow_beta_sub(tmpi) = E_pow_beta(k);
+					  tmpidx(tmpi) = k;
+					  tmpi += 1;
+				  }
+			  }//X_sub = X[,dB<=100]; beta_sub = beta[dB<=100]; E_pow_beta_sub = E_pow_beta[dB<=100];
+			  Eigen::MatrixXd CRB_sub = getEbb_LM(X_sub.transpose()*X_sub, sigm2, fdiag);
+			  for (int k = 0; k < tmpQ; k++) {
+				  if (E_pow_beta_sub(k) < CRB_sub(k))beta_sub(k) = 0;
+				  beta(tmpidx(k)) = beta_sub(k);
+			  }			 
+		  }//if (flag)        
+		
         if (P > N  && frp) {
           Eigen::MatrixXd tmp(P, 1);
           tmp.setZero();
@@ -220,7 +222,8 @@ Rcpp::List rcpp_lm_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y,SEXP s_alpha, SEXP 
           }
         }
         return Rcpp::List::create(Rcpp::Named("itrNum") = index,
-                                  Rcpp::Named("beta") = beta);
+                                  Rcpp::Named("beta") = beta,
+                                  Rcpp::Named("sigma") = sqrt(sigm2));
       }//if (flag && (index == itrNum || exitflag))
 
       B_old = B;
@@ -244,7 +247,8 @@ Rcpp::List rcpp_lm_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y,SEXP s_alpha, SEXP 
 
     }//for (int index = 0; index < itrNum; index++)
     return Rcpp::List::create(Rcpp::Named("itrNum") = index,
-                              Rcpp::Named("beta") = beta);
+                              Rcpp::Named("beta") = beta,
+                              Rcpp::Named("sigma") = sqrt(sigm2));
   }//if(!QR_flag)
   else {
     Eigen::MatrixXd beta, b, b_old, kk, Kty, EW, covW, EWW;
@@ -382,7 +386,8 @@ Rcpp::List rcpp_lm_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y,SEXP s_alpha, SEXP 
       }
     }
     return Rcpp::List::create(Rcpp::Named("itrNum") = itrNum,
-                              Rcpp::Named("beta") = beta);
+                              Rcpp::Named("beta") = beta,
+                              Rcpp::Named("sigma") = sqrt(sigm2));
   }
 
 }

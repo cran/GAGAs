@@ -34,8 +34,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cpp_COX_gaga
-Rcpp::List cpp_COX_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, Eigen::MatrixXd cens, double alpha, int itrNum, double thresh, bool flag, double lamda_0, bool fdiag);
-RcppExport SEXP _GAGAs_cpp_COX_gaga(SEXP XSEXP, SEXP ySEXP, SEXP censSEXP, SEXP alphaSEXP, SEXP itrNumSEXP, SEXP threshSEXP, SEXP flagSEXP, SEXP lamda_0SEXP, SEXP fdiagSEXP) {
+Rcpp::List cpp_COX_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, Eigen::MatrixXd cens, double alpha, int itrNum, double thresh, bool flag, double lamda_0, bool fdiag, int subItrNum);
+RcppExport SEXP _GAGAs_cpp_COX_gaga(SEXP XSEXP, SEXP ySEXP, SEXP censSEXP, SEXP alphaSEXP, SEXP itrNumSEXP, SEXP threshSEXP, SEXP flagSEXP, SEXP lamda_0SEXP, SEXP fdiagSEXP, SEXP subItrNumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -48,13 +48,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type flag(flagSEXP);
     Rcpp::traits::input_parameter< double >::type lamda_0(lamda_0SEXP);
     Rcpp::traits::input_parameter< bool >::type fdiag(fdiagSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_COX_gaga(X, y, cens, alpha, itrNum, thresh, flag, lamda_0, fdiag));
+    Rcpp::traits::input_parameter< int >::type subItrNum(subItrNumSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_COX_gaga(X, y, cens, alpha, itrNum, thresh, flag, lamda_0, fdiag, subItrNum));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_logistic_gaga
-Rcpp::List cpp_logistic_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh, SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag);
-RcppExport SEXP _GAGAs_cpp_logistic_gaga(SEXP XSEXP, SEXP ySEXP, SEXP s_alphaSEXP, SEXP s_itrNumSEXP, SEXP s_threshSEXP, SEXP s_flagSEXP, SEXP s_lamda_0SEXP, SEXP s_fdiagSEXP) {
+Rcpp::List cpp_logistic_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh, SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag, SEXP s_subItrNum);
+RcppExport SEXP _GAGAs_cpp_logistic_gaga(SEXP XSEXP, SEXP ySEXP, SEXP s_alphaSEXP, SEXP s_itrNumSEXP, SEXP s_threshSEXP, SEXP s_flagSEXP, SEXP s_lamda_0SEXP, SEXP s_fdiagSEXP, SEXP s_subItrNumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -66,13 +67,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type s_flag(s_flagSEXP);
     Rcpp::traits::input_parameter< SEXP >::type s_lamda_0(s_lamda_0SEXP);
     Rcpp::traits::input_parameter< SEXP >::type s_fdiag(s_fdiagSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_logistic_gaga(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag));
+    Rcpp::traits::input_parameter< SEXP >::type s_subItrNum(s_subItrNumSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_logistic_gaga(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_multinomial_gaga
-Rcpp::List cpp_multinomial_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh, SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag);
-RcppExport SEXP _GAGAs_cpp_multinomial_gaga(SEXP XSEXP, SEXP ySEXP, SEXP s_alphaSEXP, SEXP s_itrNumSEXP, SEXP s_threshSEXP, SEXP s_flagSEXP, SEXP s_lamda_0SEXP, SEXP s_fdiagSEXP) {
+Rcpp::List cpp_multinomial_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh, SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag, SEXP s_subItrNum);
+RcppExport SEXP _GAGAs_cpp_multinomial_gaga(SEXP XSEXP, SEXP ySEXP, SEXP s_alphaSEXP, SEXP s_itrNumSEXP, SEXP s_threshSEXP, SEXP s_flagSEXP, SEXP s_lamda_0SEXP, SEXP s_fdiagSEXP, SEXP s_subItrNumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -84,13 +86,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type s_flag(s_flagSEXP);
     Rcpp::traits::input_parameter< SEXP >::type s_lamda_0(s_lamda_0SEXP);
     Rcpp::traits::input_parameter< SEXP >::type s_fdiag(s_fdiagSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_multinomial_gaga(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag));
+    Rcpp::traits::input_parameter< SEXP >::type s_subItrNum(s_subItrNumSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_multinomial_gaga(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum));
     return rcpp_result_gen;
 END_RCPP
 }
 // cpp_poisson_gaga
-Rcpp::List cpp_poisson_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh, SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag);
-RcppExport SEXP _GAGAs_cpp_poisson_gaga(SEXP XSEXP, SEXP ySEXP, SEXP s_alphaSEXP, SEXP s_itrNumSEXP, SEXP s_threshSEXP, SEXP s_flagSEXP, SEXP s_lamda_0SEXP, SEXP s_fdiagSEXP) {
+Rcpp::List cpp_poisson_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh, SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag, SEXP s_subItrNum);
+RcppExport SEXP _GAGAs_cpp_poisson_gaga(SEXP XSEXP, SEXP ySEXP, SEXP s_alphaSEXP, SEXP s_itrNumSEXP, SEXP s_threshSEXP, SEXP s_flagSEXP, SEXP s_lamda_0SEXP, SEXP s_fdiagSEXP, SEXP s_subItrNumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -102,17 +105,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type s_flag(s_flagSEXP);
     Rcpp::traits::input_parameter< SEXP >::type s_lamda_0(s_lamda_0SEXP);
     Rcpp::traits::input_parameter< SEXP >::type s_fdiag(s_fdiagSEXP);
-    rcpp_result_gen = Rcpp::wrap(cpp_poisson_gaga(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag));
+    Rcpp::traits::input_parameter< SEXP >::type s_subItrNum(s_subItrNumSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_poisson_gaga(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_GAGAs_rcpp_lm_gaga", (DL_FUNC) &_GAGAs_rcpp_lm_gaga, 12},
-    {"_GAGAs_cpp_COX_gaga", (DL_FUNC) &_GAGAs_cpp_COX_gaga, 9},
-    {"_GAGAs_cpp_logistic_gaga", (DL_FUNC) &_GAGAs_cpp_logistic_gaga, 8},
-    {"_GAGAs_cpp_multinomial_gaga", (DL_FUNC) &_GAGAs_cpp_multinomial_gaga, 8},
-    {"_GAGAs_cpp_poisson_gaga", (DL_FUNC) &_GAGAs_cpp_poisson_gaga, 8},
+    {"_GAGAs_cpp_COX_gaga", (DL_FUNC) &_GAGAs_cpp_COX_gaga, 10},
+    {"_GAGAs_cpp_logistic_gaga", (DL_FUNC) &_GAGAs_cpp_logistic_gaga, 9},
+    {"_GAGAs_cpp_multinomial_gaga", (DL_FUNC) &_GAGAs_cpp_multinomial_gaga, 9},
+    {"_GAGAs_cpp_poisson_gaga", (DL_FUNC) &_GAGAs_cpp_poisson_gaga, 9},
     {NULL, NULL, 0}
 };
 

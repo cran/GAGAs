@@ -107,12 +107,13 @@ Eigen::MatrixXd getEb_poisson(Eigen::MatrixXd const &X, Eigen::MatrixXd const &y
 //' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 //' The running result of the algorithm is not sensitive to this value.
 //' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+//' @param s_subItrNum Maximum number of steps for subprocess iterations. 
 //'
 //' @return Coefficient vector.
 //'
 // [[Rcpp::export]]
 Rcpp::List cpp_poisson_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh,
-                                 SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag) {
+                                 SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag, SEXP s_subItrNum) {
 
   double alpha = Rcpp::as<double>(s_alpha);
   int itrNum = Rcpp::as<int>(s_itrNum);
@@ -120,6 +121,7 @@ Rcpp::List cpp_poisson_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, 
   bool flag = Rcpp::as<bool>(s_flag);
   double lamda_0 = Rcpp::as<double>(s_lamda_0);
   bool fdiag = Rcpp::as<bool>(s_fdiag);
+  int subItrNum = Rcpp::as<int>(s_subItrNum);
 
   bool exitflag = false;
   double eps = 1.e-19;
@@ -149,23 +151,24 @@ Rcpp::List cpp_poisson_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, 
       //cout<<"beta:\n"<<beta.transpose()<<endl;
       cov_beta = getDDfu_poisson(beta, X, y, b, fdiag);
     }
-    int maxItr = 20;
+    int maxItr = subItrNum;
     beta = getEb_poisson(X, y, b, beta, cov_beta, maxItr, fdiag);
     E_pow_beta = cov_beta.diagonal().array() + beta.array().pow(2);
     b = alpha / E_pow_beta.array();
 
-    if (flag && (index == itrNum || exitflag)) {
-      int tmpQ = (db.array() <= 100).count();
-      if (tmpQ == 0) {
-        beta.setZero();
-        break;
-      }
-      else {
-        cov0 = getDDfu_poisson(beta, X, y, Eigen::MatrixXd::Zero(p, 1), fdiag);
-        Eigen::MatrixXd diagcov0 = cov0.diagonal();
-        for (int k = 0; k < diagcov0.size(); k++) {
-          if (E_pow_beta(k) < diagcov0(k) || db(k)>20) beta(k) = 0;
-        }
+    if (index == itrNum || exitflag) {
+		if (flag) {
+			int tmpQ = (db.array() <= 100).count();
+			if (tmpQ == 0) {
+				beta.setZero();				
+			}
+			else {
+				cov0 = getDDfu_poisson(beta, X, y, Eigen::MatrixXd::Zero(p, 1), fdiag);
+				Eigen::MatrixXd diagcov0 = cov0.diagonal();
+				for (int k = 0; k < diagcov0.size(); k++) {
+					if (E_pow_beta(k) < diagcov0(k) || db(k)>20) beta(k) = 0;
+				}
+		}      
         break;
       }
     }

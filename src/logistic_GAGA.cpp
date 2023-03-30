@@ -134,11 +134,12 @@ Eigen::MatrixXd getEb_logistic(Eigen::MatrixXd const &X, Eigen::MatrixXd const &
 //' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 //' The running result of the algorithm is not sensitive to this value.
 //' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+//' @param s_subItrNum Maximum number of steps for subprocess iterations. 
 //'
 //' @return Coefficient vector.
 // [[Rcpp::export]]
 Rcpp::List cpp_logistic_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh,
-                                  SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag) {
+                                  SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag, SEXP s_subItrNum) {
 
   double alpha = Rcpp::as<double>(s_alpha);
   int itrNum = Rcpp::as<int>(s_itrNum);
@@ -146,6 +147,7 @@ Rcpp::List cpp_logistic_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha,
   bool flag = Rcpp::as<bool>(s_flag);
   double lamda_0 = Rcpp::as<double>(s_lamda_0);
   bool fdiag = Rcpp::as<bool>(s_fdiag);
+  int subItrNum = Rcpp::as<int>(s_subItrNum);
 
   bool exitflag = false;
   double eps = 1.e-19;
@@ -168,7 +170,7 @@ Rcpp::List cpp_logistic_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha,
       cov_beta = getDDfu_logistic(beta, X, y, b, fdiag);
       D0 = cov_beta;
     }
-    int maxItr = 20;
+    int maxItr = subItrNum;
 
     //time_t start, end;
     //start = clock();
@@ -183,11 +185,13 @@ Rcpp::List cpp_logistic_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha,
     Eigen::MatrixXd E_pow_beta = cov_beta.diagonal().array() + beta.array().pow(2);
     b = alpha / E_pow_beta.array();
 
-    if (flag && (index == itrNum || exitflag)) {
-      Eigen::MatrixXd cov0 = getDDfu_logistic(beta, X, y, Eigen::MatrixXd::Zero(p,1), fdiag).diagonal();
-      for (int k = 0; k < cov0.size(); k++) {
-        if (E_pow_beta(k) < cov0(k)) beta(k) = 0;
-      }
+    if (index == itrNum || exitflag) {
+		if (flag) {
+			Eigen::MatrixXd cov0 = getDDfu_logistic(beta, X, y, Eigen::MatrixXd::Zero(p, 1), fdiag).diagonal();
+			for (int k = 0; k < cov0.size(); k++) {
+				if (E_pow_beta(k) < cov0(k)) beta(k) = 0;
+			}
+		}	  
       break;
     }
     else {

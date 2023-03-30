@@ -31,15 +31,16 @@ rcpp_lm_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_QR_flag, s_flag, s
 #' @param y A n*1 matrix, indicating the survival time;
 #' @param cens A n*1 matrix, consists of 0 and 1, 1 indicates that the row of data is censored, 0 is opposite.
 #' @param alpha Hyperparameter. The suggested value for alpha is 2 or 3.
-#' @param itrNum The number of iteration steps. In general, 20 steps are enough.
+#' @param itrNum Maximum number of iteration steps. In general, 20 steps are enough.
 #' @param thresh Convergence threshold for beta Change, if \code{max(abs(beta-beta_old))<threshold}, return.
 #' @param flag It identifies whether to make model selection. The default is \code{TRUE}.
 #' @param lamda_0 The initial value of the regularization parameter for ridge regression.
 #' @param fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+#' @param subItrNum Maximum number of steps for subprocess iterations. 
 #'
 #' @return Coefficient vector
-cpp_COX_gaga <- function(X, y, cens, alpha = 2, itrNum = 50L, thresh = 0.001, flag = TRUE, lamda_0 = 0.5, fdiag = TRUE) {
-    .Call(`_GAGAs_cpp_COX_gaga`, X, y, cens, alpha, itrNum, thresh, flag, lamda_0, fdiag)
+cpp_COX_gaga <- function(X, y, cens, alpha = 2, itrNum = 50L, thresh = 0.001, flag = TRUE, lamda_0 = 0.5, fdiag = TRUE, subItrNum = 20L) {
+    .Call(`_GAGAs_cpp_COX_gaga`, X, y, cens, alpha, itrNum, thresh, flag, lamda_0, fdiag, subItrNum)
 }
 
 #' Fit a logistic model via the Global Adaptive Generative Adjustment algorithm using cpp
@@ -57,10 +58,11 @@ cpp_COX_gaga <- function(X, y, cens, alpha = 2, itrNum = 50L, thresh = 0.001, fl
 #' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+#' @param s_subItrNum Maximum number of steps for subprocess iterations. 
 #'
 #' @return Coefficient vector.
-cpp_logistic_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag) {
-    .Call(`_GAGAs_cpp_logistic_gaga`, X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag)
+cpp_logistic_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum) {
+    .Call(`_GAGAs_cpp_logistic_gaga`, X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum)
 }
 
 #' Fit a multinomial model via the GAGA algorithm using cpp
@@ -79,14 +81,15 @@ cpp_logistic_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda
 #' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+#' @param s_subItrNum Maximum number of steps for subprocess iterations. 
 #'
 #' @return Coefficient matrix with K-1 columns beta_1,...,beta_{K-1} where K is the class number.
 #' For k=1,..,K-1, the probability
 #' \deqn{Pr(G=k|x)=exp(x^T beta_k) /(1+sum_{k=1}^{K-1}exp(x^T beta_k))}.
 #' For k=K, the probability \deqn{Pr(G=K|x)=1/(1+sum_{k=1}^{K-1}exp(x^T beta_k))}.
 #'
-cpp_multinomial_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag) {
-    .Call(`_GAGAs_cpp_multinomial_gaga`, X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag)
+cpp_multinomial_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum) {
+    .Call(`_GAGAs_cpp_multinomial_gaga`, X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum)
 }
 
 #' Fit a poisson model via the GAGA algorithm using cpp
@@ -108,10 +111,11 @@ cpp_multinomial_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_la
 #' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+#' @param s_subItrNum Maximum number of steps for subprocess iterations. 
 #'
 #' @return Coefficient vector.
 #'
-cpp_poisson_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag) {
-    .Call(`_GAGAs_cpp_poisson_gaga`, X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag)
+cpp_poisson_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum) {
+    .Call(`_GAGAs_cpp_poisson_gaga`, X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum)
 }
 

@@ -141,6 +141,7 @@ Eigen::MatrixXd getEb_multinomial(Eigen::MatrixXd const &X, Eigen::MatrixXd cons
 //' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 //' The running result of the algorithm is not sensitive to this value.
 //' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
+//' @param s_subItrNum Maximum number of steps for subprocess iterations. 
 //'
 //' @return Coefficient matrix with K-1 columns beta_1,...,beta_{K-1} where K is the class number.
 //' For k=1,..,K-1, the probability
@@ -149,7 +150,7 @@ Eigen::MatrixXd getEb_multinomial(Eigen::MatrixXd const &X, Eigen::MatrixXd cons
 //'
 // [[Rcpp::export]]
 Rcpp::List cpp_multinomial_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alpha, SEXP s_itrNum, SEXP s_thresh,
-                                     SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag) {
+                                     SEXP s_flag, SEXP s_lamda_0, SEXP s_fdiag, SEXP s_subItrNum) {
 
   double alpha = Rcpp::as<double>(s_alpha);
   int itrNum = Rcpp::as<int>(s_itrNum);
@@ -157,6 +158,7 @@ Rcpp::List cpp_multinomial_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alp
   bool flag = Rcpp::as<bool>(s_flag);
   double lamda_0 = Rcpp::as<double>(s_lamda_0);
   bool fdiag = Rcpp::as<bool>(s_fdiag);
+  int subItrNum = Rcpp::as<int>(s_subItrNum);
 
   bool exitflag = false;
   double eps = 1.e-19;
@@ -181,7 +183,7 @@ Rcpp::List cpp_multinomial_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alp
       beta = Eigen::MatrixXd::Zero(P, C);
       cov_beta = getDDfu_multinomial(beta, X, y, b, fdiag);
     }
-    int maxItr = 20;
+    int maxItr = subItrNum;
     beta = getEb_multinomial(X, y, b, beta, cov_beta, maxItr, fdiag);
     Eigen::MatrixXd beta2 = beta.array().pow(2);
     beta2.resize(P*C,1);
@@ -189,12 +191,14 @@ Rcpp::List cpp_multinomial_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, SEXP s_alp
     b = alpha / E_pow_beta.array();
     b.resize(P, C);
 
-    if (flag && (index == itrNum || exitflag)) {
-      cov0 = getDDfu_multinomial(beta, X, y, Eigen::MatrixXd::Zero(P,C), fdiag);
-      Eigen::MatrixXd diagcov0 = cov0.diagonal();
-      for (int k = 0; k < diagcov0.size(); k++) {
-        if (E_pow_beta(k) < diagcov0(k)) beta(k) = 0;
-      }
+    if (index == itrNum || exitflag) {
+		if (flag) {
+			cov0 = getDDfu_multinomial(beta, X, y, Eigen::MatrixXd::Zero(P, C), fdiag);
+			Eigen::MatrixXd diagcov0 = cov0.diagonal();
+			for (int k = 0; k < diagcov0.size(); k++) {
+				if (E_pow_beta(k) < diagcov0(k)) beta(k) = 0;
+			}
+		}      
       break;
     }
     else {

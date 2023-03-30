@@ -12,7 +12,8 @@ multinomial_GAGA(
   thresh = 0.001,
   flag = TRUE,
   lamda_0 = 0.001,
-  fdiag = TRUE
+  fdiag = TRUE,
+  subItrNum = 20
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ number of iteration steps.}
 The running result of the algorithm is not sensitive to this value.}
 
 \item{fdiag}{It identifies whether to use diag Approximation to speed up the algorithm.}
+
+\item{subItrNum}{Maximum number of steps for subprocess iterations.}
 }
 \value{
 Coefficient matrix with K-1 columns beta_1,...,beta_{K-1} where K is the class number.
@@ -56,13 +59,13 @@ C = 3
 classnames = c("C1","C2","C3","C4")
 sample_size = 500
 test_size = 1000
-rate = 0.5 #Proportion of value zero in beta
+ratio = 0.5 #The ratio of zeroes in coefficients
 Num = 10 # Total number of experiments
 R1 = 1
 R2 = 5
-#Set true beta
+#Set the true coefficients
 beta_true = matrix(rep(0,p_size*C),c(p_size,C))
-zeroNum = round(rate*p_size)
+zeroNum = round(ratio*p_size)
 for(jj in 1:C){
   ind = sample(1:p_size,zeroNum)
   tmp = runif(p_size,0,R2)

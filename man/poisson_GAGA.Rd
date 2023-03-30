@@ -12,7 +12,8 @@ poisson_GAGA(
   thresh = 0.001,
   flag = TRUE,
   lamda_0 = 0.5,
-  fdiag = TRUE
+  fdiag = TRUE,
+  subItrNum = 20
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ number of iteration steps.}
 The running result of the algorithm is not sensitive to this value.}
 
 \item{fdiag}{It identifies whether to use diag Approximation to speed up the algorithm.}
+
+\item{subItrNum}{Maximum number of steps for subprocess iterations.}
 }
 \value{
 Coefficient vector.
@@ -53,10 +56,10 @@ p_size = 30
 sample_size=300
 R1 = 1/sqrt(p_size)
 R2 = 5
-rate = 0.5 #Proportion of value zero in beta
-# Set true beta
-zeroNum = round(rate*p_size)
-ind = sample(1:p_size,zeroNum)#'
+ratio = 0.5 #The ratio of zeroes in coefficients
+# Set the true coefficients
+zeroNum = round(ratio*p_size)
+ind = sample(1:p_size,zeroNum)
 beta_true = runif(p_size,0,R2)
 beta_true[ind] = 0
 X = R1*matrix(rnorm(sample_size * p_size), ncol = p_size)

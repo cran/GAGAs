@@ -18,7 +18,7 @@
 #' @param lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param fdiag It identifies whether to use diag Approximation to speed up the algorithm.
-#'
+#' @param subItrNum Maximum number of steps for subprocess iterations.
 #'
 #' @return Coefficient vector.
 #' @export poisson_GAGA
@@ -30,10 +30,10 @@
 #' sample_size=300
 #' R1 = 1/sqrt(p_size)
 #' R2 = 5
-#' rate = 0.5 #Proportion of value zero in beta
-#' # Set true beta
-#' zeroNum = round(rate*p_size)
-#' ind = sample(1:p_size,zeroNum)#'
+#' ratio = 0.5 #The ratio of zeroes in coefficients
+#' # Set the true coefficients
+#' zeroNum = round(ratio*p_size)
+#' ind = sample(1:p_size,zeroNum)
 #' beta_true = runif(p_size,0,R2)
 #' beta_true[ind] = 0
 #' X = R1*matrix(rnorm(sample_size * p_size), ncol = p_size)
@@ -47,14 +47,14 @@
 #' cat("\n acc:", cal.w.acc(as.character(Eb!=0),as.character(beta_true!=0)))
 #'
 #'
-poisson_GAGA = function(X,y,alpha=1,itrNum=30,thresh=1.e-3,flag=TRUE,lamda_0=0.5,fdiag=TRUE){
+poisson_GAGA = function(X,y,alpha=1,itrNum=30,thresh=1.e-3,flag=TRUE,lamda_0=0.5,fdiag=TRUE, subItrNum = 20){
 
   vnames=colnames(X)
   if(is.null(vnames))vnames=paste("V",seq(ncol(X)),sep="")
   fit = list()
   class(fit) = c("GAGA","poisson")
 
-  tmpfit = cpp_poisson_gaga(X, as.matrix(y), alpha, itrNum, thresh, flag, lamda_0, fdiag)
+  tmpfit = cpp_poisson_gaga(X, as.matrix(y), alpha, itrNum, thresh, flag, lamda_0, fdiag, subItrNum)
 
   fit$beta = as.vector(tmpfit$beta)
   names(fit$beta) = vnames

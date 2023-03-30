@@ -13,7 +13,8 @@ cpp_COX_gaga(
   thresh = 0.001,
   flag = TRUE,
   lamda_0 = 0.5,
-  fdiag = TRUE
+  fdiag = TRUE,
+  subItrNum = 20L
 )
 }
 \arguments{
@@ -26,7 +27,7 @@ If the intercept term needs to be considered in the estimation process, then the
 
 \item{alpha}{Hyperparameter. The suggested value for alpha is 2 or 3.}
 
-\item{itrNum}{The number of iteration steps. In general, 20 steps are enough.}
+\item{itrNum}{Maximum number of iteration steps. In general, 20 steps are enough.}
 
 \item{thresh}{Convergence threshold for beta Change, if \code{max(abs(beta-beta_old))<threshold}, return.}
 
@@ -35,6 +36,8 @@ If the intercept term needs to be considered in the estimation process, then the
 \item{lamda_0}{The initial value of the regularization parameter for ridge regression.}
 
 \item{fdiag}{It identifies whether to use diag Approximation to speed up the algorithm.}
+
+\item{subItrNum}{Maximum number of steps for subprocess iterations.}
 }
 \value{
 Coefficient vector

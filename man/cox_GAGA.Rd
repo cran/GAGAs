@@ -12,7 +12,8 @@ cox_GAGA(
   thresh = 0.001,
   flag = TRUE,
   lamda_0 = 0.5,
-  fdiag = TRUE
+  fdiag = TRUE,
+  subItrNum = 20
 )
 }
 \arguments{
@@ -24,7 +25,7 @@ the other column must be named "status", and consists of 0 and 1, 0 indicates th
 
 \item{alpha}{Hyperparameter. The suggested value for alpha is 2 or 3.}
 
-\item{itrNum}{The number of iteration steps. In general, 20 steps are enough.
+\item{itrNum}{Maximum number of iteration steps. In general, 20 steps are enough.
 If the condition number of \code{X} is large, it is recommended to greatly increase the
 number of iteration steps.}
 
@@ -36,6 +37,8 @@ number of iteration steps.}
 The running result of the algorithm is not sensitive to this value.}
 
 \item{fdiag}{It identifies whether to use diag Approximation to speed up the algorithm.}
+
+\item{subItrNum}{Maximum number of steps for subprocess iterations.}
 }
 \value{
 Coefficient vector.
@@ -51,11 +54,11 @@ sample_size = 500
 test_size = 1000
 R1 = 3
 R2 = 1
-rate = 0.5 #Proportion of value zero in beta
+ratio = 0.5 #The ratio of zeroes in coefficients
 censoringRate = 0.25 #Proportion of censoring data in observation data
-# Set true beta
-zeroNum = round(rate*p_size)
-ind = sample(1:p_size,zeroNum)#'
+# Set the true coefficients
+zeroNum = round(ratio*p_size)
+ind = sample(1:p_size,zeroNum)
 beta_true = runif(p_size,-R2,R2)
 beta_true[ind] = 0
 # Generate training samples
@@ -65,7 +68,7 @@ u = runif(sample_size,0,1)
 t = ((-log(1-u)/(3*exp(z)))*100)^(0.1)
 cs = rep(0,sample_size)
 csNum = round(censoringRate*sample_size)
-ind = sample(1:sample_size,csNum)#'
+ind = sample(1:sample_size,csNum)
 cs[ind] = 1
 t[ind] = runif(csNum,0,0.8)*t[ind]
 y = cbind(t,1 - cs)
@@ -81,7 +84,7 @@ u = runif(test_size,0,1)
 t = ((-log(1-u)/(3*exp(z)))*100)^(0.1)
 cs = rep(0,test_size)
 csNum = round(censoringRate*test_size)
-ind = sample(1:test_size,csNum)#'
+ind = sample(1:test_size,csNum)
 cs[ind] = 1
 t[ind] = runif(csNum,0,0.8)*t[ind]
 y_t = cbind(t,1 - cs)

@@ -10,13 +10,14 @@ GAGAs(
   y,
   family = c("gaussian", "binomial", "poisson", "multinomial", "cox"),
   alpha = 2,
-  itrNum = 500,
+  itrNum = 100,
   thresh = 0.001,
   QR_flag = FALSE,
   flag = TRUE,
   lamda_0 = 0.001,
   fdiag = TRUE,
-  frp = TRUE
+  frp = TRUE,
+  subItrNum = 20
 )
 }
 \arguments{
@@ -54,6 +55,8 @@ The running result of the algorithm is not sensitive to this value.}
 \item{fdiag}{It identifies whether to use diag Approximation to speed up the algorithm.}
 
 \item{frp}{Identifies if a method is preprocessed to reduce the number of parameters}
+
+\item{subItrNum}{Maximum number of steps for subprocess iterations.}
 }
 \value{
 Regression coefficients
@@ -61,7 +64,7 @@ Regression coefficients
 \description{
 Fits linear, logistic and multinomial, poisson, and Cox regression models via Global Adaptive Generative Adjustment algorithm.
 
-Fits linear, logistic and multinomial, poisson, and Cox regression models via Global Adaptive Generative Adjustment algorithm.
+Fits linear, logistic and multinomial, poisson, and Cox regression models via the Global Adaptive Generative Adjustment algorithm.
 }
 \section{Mypackage functions}{
 
@@ -75,9 +78,9 @@ p_size = 30
 sample_size=300
 R1 = 3
 R2 = 2
-rate = 0.5 #Proportion of value zero in beta
-# Set true beta
-zeroNum = round(rate*p_size)
+ratio = 0.5 #The ratio of zeroes in coefficients
+# Set the true coefficients
+zeroNum = round(ratio*p_size)
 ind = sample(1:p_size,zeroNum)
 beta_true = runif(p_size,0,R2)
 beta_true[ind] = 0
@@ -105,9 +108,9 @@ sample_size=600
 test_size=1000
 R1 = 1
 R2 = 3
-rate = 0.5 #Proportion of value zero in beta
-#Set true beta
-zeroNum = round(rate*p_size)
+ratio = 0.5 #The ratio of zeroes in coefficients
+#Set the true coefficients
+zeroNum = round(ratio*p_size)
 ind = sample(1:p_size,zeroNum)
 beta_true = runif(p_size,R2*0.2,R2)
 beta_true[ind] = 0
@@ -142,13 +145,13 @@ C = 3
 classnames = c("C1","C2","C3","C4")
 sample_size = 500
 test_size = 1000
-rate = 0.5 #Proportion of value zero in beta
+ratio = 0.5 #The ratio of zeroes in coefficients
 Num = 10 # Total number of experiments
 R1 = 1
 R2 = 5
-#Set true beta
+#Set the true coefficients
 beta_true = matrix(rep(0,p_size*C),c(p_size,C))
-zeroNum = round(rate*p_size)
+zeroNum = round(ratio*p_size)
 for(jj in 1:C){
   ind = sample(1:p_size,zeroNum)
   tmp = runif(p_size,0,R2)
@@ -211,10 +214,10 @@ p_size = 30
 sample_size=300
 R1 = 1/sqrt(p_size)
 R2 = 5
-rate = 0.5 #Proportion of value zero in beta
-# Set true beta
-zeroNum = round(rate*p_size)
-ind = sample(1:p_size,zeroNum)#'
+ratio = 0.5 #The ratio of zeroes in coefficients
+# Set the true coefficients
+zeroNum = round(ratio*p_size)
+ind = sample(1:p_size,zeroNum)
 beta_true = runif(p_size,0,R2)
 beta_true[ind] = 0
 X = R1*matrix(rnorm(sample_size * p_size), ncol = p_size)
@@ -233,11 +236,11 @@ sample_size = 500
 test_size = 1000
 R1 = 3
 R2 = 1
-rate = 0.5 #Proportion of value zero in beta
+ratio = 0.5 #The ratio of zeroes in coefficients
 censoringRate = 0.25 #Proportion of censoring data in observation data
-# Set true beta
-zeroNum = round(rate*p_size)
-ind = sample(1:p_size,zeroNum)#'
+# Set the true coefficients
+zeroNum = round(ratio*p_size)
+ind = sample(1:p_size,zeroNum)
 beta_true = runif(p_size,-R2,R2)
 beta_true[ind] = 0
 # Generate training samples
@@ -247,7 +250,7 @@ u = runif(sample_size,0,1)
 t = ((-log(1-u)/(3*exp(z)))*100)^(0.1)
 cs = rep(0,sample_size)
 csNum = round(censoringRate*sample_size)
-ind = sample(1:sample_size,csNum)#'
+ind = sample(1:sample_size,csNum)
 cs[ind] = 1
 t[ind] = runif(csNum,0,0.8)*t[ind]
 y = cbind(t,1 - cs)
@@ -263,7 +266,7 @@ u = runif(test_size,0,1)
 t = ((-log(1-u)/(3*exp(z)))*100)^(0.1)
 cs = rep(0,test_size)
 csNum = round(censoringRate*test_size)
-ind = sample(1:test_size,csNum)#'
+ind = sample(1:test_size,csNum)
 cs[ind] = 1
 t[ind] = runif(csNum,0,0.8)*t[ind]
 y_t = cbind(t,1 - cs)
