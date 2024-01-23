@@ -51,7 +51,7 @@ double Func_u_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X, Eigen::Mat
   }
   Eigen::MatrixXd risksum = tmp0;
   for (int k = 0; k < tmp0.size(); k++) {
-    risksum(k) = tmp0(atrisk(k));
+    risksum(k) = tmp0(static_cast<int>(atrisk(k)));
   }
 
   double v1 = -(obsfreq.transpose() * (Xu.array() - risksum.array().log()).matrix()).sum();
@@ -97,7 +97,7 @@ Eigen::MatrixXd getDDfu_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X,
   }
   Eigen::MatrixXd risksum = tmp0;
   for (int k = 0; k < tmp0.size(); k++) {
-    risksum(k) = tmp0(atrisk(k));
+    risksum(k) = tmp0(static_cast<int>(atrisk(k)));
   }
 
   int n = X.rows();
@@ -113,7 +113,7 @@ Eigen::MatrixXd getDDfu_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X,
   }
 
   for (int k = 0; k < Xr.rows(); k++) {
-    Xrsum.row(k) = Xr.row(atrisk(k));
+    Xrsum.row(k) = Xr.row(static_cast<int>(atrisk(k)));
   }
 
   Eigen::MatrixXd A = Xrsum.array().colwise() / risksum.array().col(0);
@@ -142,7 +142,7 @@ Eigen::MatrixXd getDDfu_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X,
     }
     Eigen::MatrixXd XXrsum = M;
     for (int k = 0; k < XXrsum.rows(); k++) {
-      XXrsum.row(k) = M.row(atrisk(k));
+      XXrsum.row(k) = M.row(static_cast<int>(atrisk(k)));
     }
     XXrsum.array().colwise() /= risksum.array().col(0);
     Eigen::MatrixXd tmp = obsfreq.transpose() * XXrsum;
@@ -180,7 +180,7 @@ Eigen::MatrixXd getDDfu_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X,
     }
     Eigen::MatrixXd XXrsum = XXr;
     for (int k = 0; k < XXrsum.rows(); k++) {
-      XXrsum.row(k) = XXr.row(atrisk(k));
+      XXrsum.row(k) = XXr.row(static_cast<int>(atrisk(k)));
     }
     XXrsum.array().colwise() /= risksum.array().col(0);
     Eigen::MatrixXd tmp = obsfreq.transpose() * XXrsum;
@@ -210,7 +210,7 @@ double negloglike_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X,
   }
   Eigen::MatrixXd risksum = tmp0;
   for (int k = 0; k < tmp0.size(); k++) {
-    risksum(k) = tmp0(atrisk(k));
+    risksum(k) = tmp0(static_cast<int>(atrisk(k)));
   }
 
   double v1 = -(obsfreq.transpose() * (Xu.array() - risksum.array().log()).matrix()).sum();
@@ -230,7 +230,7 @@ double negloglike_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X,
   }
 
   for (int k = 0; k < Xr.rows(); k++) {
-    Xrsum.row(k) = Xr.row(atrisk(k));
+    Xrsum.row(k) = Xr.row(static_cast<int>(atrisk(k)));
   }
 
   Eigen::MatrixXd A = Xrsum.array().colwise() / risksum.array().col(0);
@@ -261,7 +261,7 @@ double negloglike_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X,
     }
     Eigen::MatrixXd XXrsum = M;
     for (int k = 0; k < XXrsum.rows(); k++) {
-      XXrsum.row(k) = M.row(atrisk(k));
+      XXrsum.row(k) = M.row(static_cast<int>(atrisk(k)));
     }
     XXrsum.array().colwise() /= risksum.array().col(0);
     Eigen::MatrixXd tmp = obsfreq.transpose() * XXrsum;
@@ -299,7 +299,7 @@ double negloglike_COX(Eigen::MatrixXd const &u, Eigen::MatrixXd const &X,
     }
     Eigen::MatrixXd XXrsum = XXr;
     for (int k = 0; k < XXrsum.rows(); k++) {
-      XXrsum.row(k) = XXr.row(atrisk(k));
+      XXrsum.row(k) = XXr.row(static_cast<int>(atrisk(k)));
     }
     XXrsum.array().colwise() /= risksum.array().col(0);
     Eigen::MatrixXd tmp = obsfreq.transpose() * XXrsum;
@@ -364,7 +364,7 @@ Eigen::MatrixXd getEb_COX(Eigen::MatrixXd const &u0, Eigen::MatrixXd const &X,
 //' @param flag It identifies whether to make model selection. The default is \code{TRUE}.
 //' @param lamda_0 The initial value of the regularization parameter for ridge regression.
 //' @param fdiag It identifies whether to use diag Approximation to speed up the algorithm.
-//' @param subItrNum Maximum number of steps for subprocess iterations. 
+//' @param subItrNum Maximum number of steps for subprocess iterations.
 //'
 //' @return Coefficient vector
 // [[Rcpp::export]]
@@ -430,7 +430,7 @@ Rcpp::List cpp_COX_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, Eigen::MatrixXd ce
 		if (flag) {
 			int tmpQ = (db.array() <= 100).count();
 			if (tmpQ == 0) {
-				beta.setZero();				
+				beta.setZero();
 			}
 			else {
 				cov0 = getDDfu_COX(beta, X, sorty, freq, cens, atrisk, Eigen::MatrixXd::Zero(p, 1), fdiag);
@@ -438,10 +438,10 @@ Rcpp::List cpp_COX_gaga(Eigen::MatrixXd X, Eigen::MatrixXd y, Eigen::MatrixXd ce
 				Eigen::MatrixXd diagcov0 = cov0.diagonal();
 				for (int k = 0; k < diagcov0.size(); k++) {
 					if (E_pow_beta(k) < diagcov0(k) || db(k)>20) beta(k) = 0;
-				}				
+				}
 			}
 		}
-		break;	  
+		break;
     }
     else {
       b_old = b;

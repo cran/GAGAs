@@ -16,7 +16,7 @@
 #' @param fdiag It identifies whether to use diag Approximation to speed up the algorithm.
 #' @param subItrNum Maximum number of steps for subprocess iterations.
 #'
-#' @return Coefficient matrix with K-1 columns beta_1,...,beta_{K-1} where K is the class number.
+#' @return Coefficient matrix with K-1 columns, where K is the class number.
 #' For k=1,..,K-1, the probability
 #' \deqn{Pr(G=k|x)=exp(x^T beta_k) /(1+sum_{k=1}^{K-1}exp(x^T beta_k))}.
 #' For k=K, the probability \deqn{Pr(G=K|x)=1/(1+sum_{k=1}^{K-1}exp(x^T beta_k))}.

@@ -36,7 +36,7 @@ rcpp_lm_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_QR_flag, s_flag, s
 #' @param flag It identifies whether to make model selection. The default is \code{TRUE}.
 #' @param lamda_0 The initial value of the regularization parameter for ridge regression.
 #' @param fdiag It identifies whether to use diag Approximation to speed up the algorithm.
-#' @param subItrNum Maximum number of steps for subprocess iterations. 
+#' @param subItrNum Maximum number of steps for subprocess iterations.
 #'
 #' @return Coefficient vector
 cpp_COX_gaga <- function(X, y, cens, alpha = 2, itrNum = 50L, thresh = 0.001, flag = TRUE, lamda_0 = 0.5, fdiag = TRUE, subItrNum = 20L) {
@@ -58,7 +58,7 @@ cpp_COX_gaga <- function(X, y, cens, alpha = 2, itrNum = 50L, thresh = 0.001, fl
 #' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
-#' @param s_subItrNum Maximum number of steps for subprocess iterations. 
+#' @param s_subItrNum Maximum number of steps for subprocess iterations.
 #'
 #' @return Coefficient vector.
 cpp_logistic_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda_0, s_fdiag, s_subItrNum) {
@@ -81,9 +81,9 @@ cpp_logistic_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_lamda
 #' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
-#' @param s_subItrNum Maximum number of steps for subprocess iterations. 
+#' @param s_subItrNum Maximum number of steps for subprocess iterations.
 #'
-#' @return Coefficient matrix with K-1 columns beta_1,...,beta_{K-1} where K is the class number.
+#' @return Coefficient matrix with K-1 columns, where K is the class number.
 #' For k=1,..,K-1, the probability
 #' \deqn{Pr(G=k|x)=exp(x^T beta_k) /(1+sum_{k=1}^{K-1}exp(x^T beta_k))}.
 #' For k=K, the probability \deqn{Pr(G=K|x)=1/(1+sum_{k=1}^{K-1}exp(x^T beta_k))}.
@@ -111,7 +111,7 @@ cpp_multinomial_gaga <- function(X, y, s_alpha, s_itrNum, s_thresh, s_flag, s_la
 #' @param s_lamda_0 The initial value of the regularization parameter for ridge regression.
 #' The running result of the algorithm is not sensitive to this value.
 #' @param s_fdiag It identifies whether to use diag Approximation to speed up the algorithm.
-#' @param s_subItrNum Maximum number of steps for subprocess iterations. 
+#' @param s_subItrNum Maximum number of steps for subprocess iterations.
 #'
 #' @return Coefficient vector.
 #'
